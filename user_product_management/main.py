@@ -1,11 +1,13 @@
-from sqlalchemy import ForeignKey, create_engine, Column, String
-from sqlalchemy.orm import sessionmaker,  relationship
+from sqlalchemy import ForeignKey, create_engine, Column, String, Integer, select
+from typing import List
+from sqlalchemy.orm import sessionmaker,  relationship,Mapped, mapped_column, Session
 from sqlalchemy.ext.declarative import declarative_base
-import uuid 
+import uuid
+
 
 engine = create_engine("mysql+mysqlconnector://root:PASSWORD@localhost:3306/user_product")
 
-Session = sessionmaker(bind=engine)
+s = Session(engine)
 Base = declarative_base()
 
 def generate_uuid():
@@ -13,10 +15,43 @@ def generate_uuid():
 
 class User(Base):
     __tablename__ = 'user'
-    id = Column(String(225), primary_key=True, default=generate_uuid)
-    name = Column(String(50))
-    email = Column(String(120))  # Changed to String(120)
-    addresses = relationship("Address",back_populates = "users")
+    id:Mapped[str] = mapped_column(String(100),primary_key=True, default=generate_uuid)
+    name:Mapped[str] = mapped_column(String(100))
+    email:Mapped[str] = mapped_column(String(100))
+
+class Product(Base):
+    __tablename__ = 'product'
+    id:Mapped[str] = mapped_column(String(100),primary_key=True, default=generate_uuid)
+    name:Mapped[str] = mapped_column(String(100))
+    price:Mapped[int] = mapped_column(String(100))
+    
+class UserProducts(Base):
+    __tablename__ = "user_products"
+    id:Mapped[str] = mapped_column(String(100),primary_key=True, default=generate_uuid)
+    user_id:Mapped[str] = mapped_column(String(100),ForeignKey("user.id"))
+    product_id:Mapped[str] = mapped_column(String(100),ForeignKey("product.id"))
+
+
+u_id = generate_uuid()
+p_id = generate_uuid()
+u = User(
+    id = u_id,
+    name="test",
+    email="test@gmail.com"
+)
+p = Product(
+    id = p_id,
+    name="product",
+    price=2
+)
+up = UserProducts(
+    user_id= u_id,
+    product_id=p_id
+)
+
+s.add_all([u, p, up])
+s.commit()
+print(u)
 
 
 Base.metadata.create_all(engine)
