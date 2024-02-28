@@ -37,27 +37,6 @@ class UserProducts(Base):
 
 Base.metadata.create_all(engine)
 
-u_id = generate_uuid()
-p_id = generate_uuid()
-# u = User(
-#     id = u_id,
-#     name="test",
-#     email="test@gmail.com"
-# )
-# p = Product(
-#     id = p_id,
-#     name="product",
-#     price=2
-# )
-# up = UserProducts(
-#     user_id= u_id,
-#     product_id=p_id
-# )
-
-# s.add_all([u, p, up])
-# s.commit()
-# print(u)
-
 for i in range(10):
     p = Product(
         id = generate_uuid(),
@@ -88,17 +67,3 @@ if user:
         product_id=product.id)
     s.add_all([u, p, up])
     s.commit()
-    
-
-        
-    
-        
-
-# stmt = select(User).join(UserProducts.user).join(UserProducts.product_details)
-# print(stmt.compile(dialect=mysql.dialect()))
-# data = s.scalars(stmt).all()
-# print(data)
-
-# for r in data:
-#     for product in r.u_product:
-#         print(r.id,r.name, r.email,product.id, product.product_id,product.product_details.name )

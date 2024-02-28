@@ -1,7 +1,6 @@
 from flask import Flask, request
 from model import generate_uuid, User, Address,Session
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
